@@ -15,13 +15,8 @@ import (
 
 // All error constants
 var (
-	ErrJSONUnmarshal           = errors.New("json unmarshal")
-	ErrStatusOffline           = errors.New("You can't set your Status to offline")
-	ErrVerificationLevelBounds = errors.New("VerificationLevel out of bounds, should be between 0 and 3")
-	ErrPruneDaysBounds         = errors.New("the number of days should be more than or equal to 1")
-	ErrGuildNoIcon             = errors.New("guild does not have an icon set")
-	ErrGuildNoSplash           = errors.New("guild does not have a splash set")
-	ErrUnauthorized            = errors.New("HTTP request was unauthorized. This could be because the provided token was not a bot token")
+	ErrJSONUnmarshal = errors.New("json unmarshal")
+	ErrUnauthorized  = errors.New("HTTP request was unauthorized. This could be because the provided token was not a bot token")
 )
 
 var (
@@ -317,9 +312,9 @@ func (s *Session) ServerGet(serverID string) (*Server, error) {
 // Functions specific to Guilded Channels
 // ------------------------------------------------------------------------------------------------
 
-// ChannelCreate creates a channel in a server.
+// ServerChannelCreate creates a channel in a server.
 // data : The channel struct to send.
-func (s *Session) ChannelCreate(data *ChannelCreate) (*ServerChannel, error) {
+func (s *Session) ChannelCreate(data *ServerChannelCreate) (*ServerChannel, error) {
 	body, err := s.Request("POST", EndpointChannels, data)
 	if err != nil {
 		return nil, err
@@ -343,10 +338,10 @@ func (s *Session) ChannelGet(channelID string) (*ServerChannel, error) {
 	return st, err
 }
 
-// ChannelUpdate updates a channel.
+// ServerChannelUpdate updates a channel.
 // channelID : The ID of a Channel.
 // data      : The channel struct to send.
-func (s *Session) ChannelUpdate(channelID string, data *ChannelUpdate) (*ServerChannel, error) {
+func (s *Session) ChannelUpdate(channelID string, data *ServerChannelUpdate) (*ServerChannel, error) {
 	body, err := s.Request("PATCH", EndpointChannel(channelID), data)
 	if err != nil {
 		return nil, err

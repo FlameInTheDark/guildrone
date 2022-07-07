@@ -1,5 +1,7 @@
 package guildrone
 
+import "time"
+
 // User stores the data of a user.
 type User struct {
 	// The ID of the user
@@ -19,10 +21,15 @@ type User struct {
 	Banner string `json:"banner"`
 
 	// The timestamp of when the user was created
-	CreatedAt Timestamp `json:"createdAt"`
+	CreatedAt time.Time `json:"createdAt"`
 }
 
 // Mention returns a string that can be used to mention the user.
 func (u *User) Mention() string {
 	return "@" + u.Name + " "
+}
+
+// MentionEmbed returns a string that can be used to mention the user in an embed.
+func (u *User) MentionEmbed() string {
+	return "<@" + u.ID + ">"
 }

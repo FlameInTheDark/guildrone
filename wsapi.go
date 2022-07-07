@@ -6,10 +6,11 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/gorilla/websocket"
 	"io"
 	"net/http"
 	"time"
+
+	"github.com/gorilla/websocket"
 )
 
 // ErrWSAlreadyOpen is thrown when you attempt to open

@@ -1,11 +1,12 @@
 package guildrone
 
 import (
-	"encoding/json"
-	"github.com/gorilla/websocket"
 	"net/http"
 	"sync"
 	"time"
+
+	"github.com/go-playground/validator/v10"
+	"github.com/gorilla/websocket"
 )
 
 const (
@@ -103,7 +104,7 @@ type ServerMemberBan struct {
 	UserSummary UserSummary `json:"user"`
 	Reason      string      `json:"reason"`
 	CreatedBy   string      `json:"createdBy"`
-	CreatedAt   Timestamp   `json:"createdAt"`
+	CreatedAt   time.Time   `json:"createdAt"`
 }
 
 type MemberRole struct {
@@ -120,9 +121,9 @@ type ServerChannel struct {
 	Type       ServerChannelType `json:"type"`
 	Name       string            `json:"name"`
 	Topic      string            `json:"topic"`
-	CreatedAt  Timestamp         `json:"createdAt"`
+	CreatedAt  time.Time         `json:"createdAt"`
 	CreatedBy  string            `json:"createdBy"`
-	UpdatedAt  *Timestamp        `json:"updatedAt"`
+	UpdatedAt  *time.Time        `json:"updatedAt"`
 	ServerId   string            `json:"serverId"`
 	ParentId   string            `json:"parentId"`
 	CategoryId int               `json:"categoryId"`
@@ -137,9 +138,9 @@ type Webhook struct {
 	Name      string     `json:"name"`
 	ServerId  string     `json:"serverId"`
 	ChannelId string     `json:"channelId"`
-	CreatedAt Timestamp  `json:"createdAt"`
+	CreatedAt time.Time  `json:"createdAt"`
 	CreatedBy string     `json:"createdBy"`
-	DeletedAt *Timestamp `json:"deletedAt"`
+	DeletedAt *time.Time `json:"deletedAt"`
 	Token     string     `json:"token"`
 }
 
@@ -150,9 +151,9 @@ type Doc struct {
 	Title     string     `json:"title"`
 	Content   string     `json:"content"`
 	Mentions  *Mentions  `json:"mentions"`
-	CreatedAt Timestamp  `json:"createdAt"`
+	CreatedAt time.Time  `json:"createdAt"`
 	CreatedBy string     `json:"createdBy"`
-	UpdatedAt *Timestamp `json:"updatedAt"`
+	UpdatedAt *time.Time `json:"updatedAt"`
 	UpdatedBy string     `json:"updatedBy"`
 }
 
@@ -165,12 +166,12 @@ type CalendarEvent struct {
 	Location    string    `json:"location"`
 	URL         string    `json:"url"`
 	Color       int       `json:"color"`
-	StartsAt    Timestamp `json:"startsAt"`
+	StartsAt    time.Time `json:"startsAt"`
 	// Duration in minutes
 	Duration     int          `json:"duration"`
 	IsPrivate    bool         `json:"isPrivate"`
 	Mentions     *Mentions    `json:"mentions"`
-	CreatedAt    Timestamp    `json:"createdAt"`
+	CreatedAt    time.Time    `json:"createdAt"`
 	CreatedBy    string       `json:"createdBy"`
 	Cancellation Cancellation `json:"cancellation"`
 }
@@ -180,16 +181,17 @@ type Cancellation struct {
 	CreatedBy   string `json:"createdBy"`
 }
 
+// ListItem is a struct that represents a list item.
 type ListItem struct {
 	ID                 string        `json:"id"`
 	ServerID           string        `json:"serverId"`
 	ChannelID          string        `json:"channelId"`
 	Message            string        `json:"message"`
 	Mentions           *Mentions     `json:"mentions"`
-	CreatedAt          Timestamp     `json:"createdAt"`
+	CreatedAt          time.Time     `json:"createdAt"`
 	CreatedBy          string        `json:"createdBy"`
 	CreatedByWebhookId string        `json:"createdByWebhookId"`
-	UpdatedAt          *Timestamp    `json:"updatedAt"`
+	UpdatedAt          *time.Time    `json:"updatedAt"`
 	UpdatedBy          string        `json:"updatedBy"`
 	ParentListItemId   string        `json:"parentListItemId"`
 	CompletedAt        string        `json:"completedAt"`
@@ -197,15 +199,17 @@ type ListItem struct {
 	Note               *ListItemNote `json:"note"`
 }
 
+// ListItemNote is a struct that represents a list item note.
 type ListItemNote struct {
-	CreatedAt Timestamp  `json:"createdAt"`
+	CreatedAt time.Time  `json:"createdAt"`
 	CreatedBy string     `json:"createdBy"`
-	UpdatedAt *Timestamp `json:"updatedAt"`
+	UpdatedAt *time.Time `json:"updatedAt"`
 	UpdatedBy string     `json:"updatedBy"`
 	Mentions  *Mentions  `json:"mentions"`
 	Content   string     `json:"content"`
 }
 
+// Reaction is a struct that represents a reaction.
 type Reaction struct {
 	ChannelID string `json:"channelId"`
 	MessageID string `json:"messageId"`
@@ -213,47 +217,19 @@ type Reaction struct {
 	Emote     Emote  `json:"emote"`
 }
 
+// Emote is a struct that represents a reaction emote.
 type Emote struct {
 	ID   int    `json:"id"`
 	Name string `json:"name"`
 	URL  string `json:"url"`
 }
 
-type Timestamp struct {
-	RawTime string    `json:"rawTime"`
-	Time    time.Time `json:"time"`
-}
-
-func (t Timestamp) String() string {
-	if t.RawTime != "" {
-		return t.RawTime
-	}
-	return t.Time.Format(time.RFC3339)
-}
-
-func (t Timestamp) MarshalJSON() ([]byte, error) {
-	if t.RawTime != "" {
-		return []byte(t.RawTime), nil
-	}
-	return []byte(t.Time.Format(time.RFC3339)), nil
-}
-
-func (t *Timestamp) UnmarshalJSON(b []byte) error {
-	var s string
-	var err error
-	if err := json.Unmarshal(b, &s); err != nil {
-		return err
-	}
-	t.RawTime = s
-	t.Time, err = time.Parse(time.RFC3339, s)
-	return err
-}
-
+// BotUser is a bot data structure.
 type BotUser struct {
 	ID        string    `json:"id"`
 	BotID     string    `json:"botId"`
 	Name      string    `json:"name"`
-	CreatedAt Timestamp `json:"createdAt"`
+	CreatedAt time.Time `json:"createdAt"`
 	CreatedBy string    `json:"createdBy"`
 }
 
@@ -276,6 +252,7 @@ const (
 
 type ServerType string
 
+// Server represents a server in Guilded
 type Server struct {
 	ID               string      `json:"id"`
 	OwnerID          string      `json:"ownerId"`
@@ -287,51 +264,79 @@ type Server struct {
 	Banner           string      `json:"banner,omitempty"`
 	Timezone         string      `json:"timezone,omitempty"`
 	IsVerified       bool        `json:"isVerified,omitempty"`
-	DefaultChannleID string      `json:"defaultChannelId,omitempty"`
-	CreatedAt        Timestamp   `json:"createdAt"`
+	DefaultChannelID string      `json:"defaultChannelId,omitempty"`
+	CreatedAt        time.Time   `json:"createdAt"`
 }
 
-type ChannelCreate struct {
-	Name       string            `json:"name"`
-	Topic      string            `json:"topic,omitempty"`
+// ServerChannelCreate is the request body for creating a channel
+type ServerChannelCreate struct {
+	Name       string            `json:"name" validate:"required,min=1,max=100"`
+	Topic      string            `json:"topic,omitempty" validate:"omitempty,min=1,max=512"`
 	IsPublic   bool              `json:"isPublic,omitempty"`
-	Type       ServerChannelType `json:"type"`
+	Type       ServerChannelType `json:"type" validate:"required"`
 	ServerID   string            `json:"serverId,omitempty"`
 	GroupID    string            `json:"groupId,omitempty"`
 	CategoryID string            `json:"categoryId,omitempty"`
 }
 
-type ChannelUpdate struct {
-	Name     string `json:"name,omitempty"`
-	Topic    string `json:"topic,omitempty"`
+// Validate validates the channel create request
+// Returns nil if valid, otherwise returns an error
+func (c *ServerChannelCreate) Validate() error {
+	validate := validator.New()
+	return validate.Struct(c)
+}
+
+// ServerChannelUpdate is the request body for updating a channel
+type ServerChannelUpdate struct {
+	Name     string `json:"name,omitempty" validate:"omitempty,min=1,max=100"`
+	Topic    string `json:"topic,omitempty" validate:"omitempty,min=1,max=512"`
 	IsPublic bool   `json:"isPublic,omitempty"`
 }
 
+// Validate validates the channel update request
+// Returns nil if valid, otherwise returns an error
+func (c *ServerChannelUpdate) Validate() error {
+	validate := validator.New()
+	return validate.Struct(c)
+}
+
+// ServerMemberNicknameUpdate is the request body for updating a server member nickname
 type ServerMemberNicknameUpdate struct {
 	Nickname string `json:"nickname"`
 }
 
+// ServerMemberBanCreate is the request body for banning a user from a server
 type ServerMemberBanCreate struct {
 	Reason string `json:"reason"`
 }
 
+// ForumTopic is the forum topic model
 type ForumTopic struct {
 	ID                 int        `json:"id"`
 	ServerID           string     `json:"serverId"`
 	ChannelID          string     `json:"channelId"`
 	Title              string     `json:"title,omitempty"`
 	Content            string     `json:"content,omitempty"`
-	CreatedAt          Timestamp  `json:"createdAt"`
+	CreatedAt          time.Time  `json:"createdAt"`
 	CreatedBy          string     `json:"createdBy"`
 	CreatedByWebhookId string     `json:"createdByWebhookId,omitempty"`
-	UpdatedAt          *Timestamp `json:"updatedAt,omitempty"`
+	UpdatedAt          *time.Time `json:"updatedAt,omitempty"`
 }
 
+// ChannelForumTopicCreate is the request body for creating a forum topic
 type ChannelForumTopicCreate struct {
-	Title   string `json:"title"`
+	Title   string `json:"title" validate:"min=1"`
 	Content string `json:"content"`
 }
 
+// Validate validates the channel forum topic create request
+// Returns nil if valid, otherwise returns an error
+func (c *ChannelForumTopicCreate) Validate() error {
+	validate := validator.New()
+	return validate.Struct(c)
+}
+
+// ChannelListItem is the request body for creating or updating a channel list item
 type ChannelListItem struct {
 	Message string               `json:"message"`
 	Note    *ChannelListItemNote `json:"note,omitempty"`
@@ -342,43 +347,91 @@ type ChannelListItemNote struct {
 }
 
 type ChannelDoc struct {
-	Title   string `json:"title"`
+	Title   string `json:"title" validate:"min=1"`
 	Content string `json:"content"`
 }
 
+// Validate validates the channel doc create/update request
+// Returns nil if valid, otherwise returns an error
+func (c *ChannelDoc) Validate() error {
+	validate := validator.New()
+	return validate.Struct(c)
+}
+
+// ChannelEvent is the request body for creating/updating a channel event
 type ChannelEvent struct {
-	Name        string     `json:"name"`
-	Description string     `json:"description,omitempty"`
-	Location    string     `json:"location,omitempty"`
-	StartsAt    *Timestamp `json:"startsAt,omitempty"`
+	Name        string     `json:"name" validate:"min=1,max=60"`
+	Description string     `json:"description,omitempty" validate:"omitempty,min=1,max=8000"`
+	Location    string     `json:"location,omitempty" validate:"omitempty,min=1,max=8000"`
+	StartsAt    *time.Time `json:"startsAt,omitempty"`
 	URL         string     `json:"url,omitempty"`
-	Color       int        `json:"color,omitempty"`
-	Duration    int        `json:"duration,omitempty"`
+	Color       int        `json:"color,omitempty" validate:"omitempty,min=0,max=16777215"`
+	Duration    int        `json:"duration,omitempty" validate:"omitempty,min=1"`
 	IsPrivate   bool       `json:"isPrivate,omitempty"`
 }
 
+// Validate validates the channel event create/update request
+// Returns nil if valid, otherwise returns an error
+func (e *ChannelEvent) Validate() error {
+	validate := validator.New()
+	return validate.Struct(e)
+}
+
+// ChannelEventsRequest is the request body for listing channel events
 type ChannelEventsRequest struct {
-	Before *Timestamp `json:"before,omitempty"`
-	After  *Timestamp `json:"after,omitempty"`
-	Limit  int        `json:"limit,omitempty"`
+	Before *time.Time `json:"before,omitempty"`
+	After  *time.Time `json:"after,omitempty"`
+	Limit  int        `json:"limit,omitempty" validate:"omitempty,min=1,max=500"`
 }
 
+// Validate validates the channel events request
+// Returns nil if valid, otherwise returns an error
+func (e *ChannelEventsRequest) Validate() error {
+	validate := validator.New()
+	return validate.Struct(e)
+}
+
+// ServerXPUpdate is the request body for updating a server member xp
 type ServerXPUpdate struct {
-	Amount int `json:"amount"`
+	Amount int `json:"amount" validate:"min=-1000,max=1000"`
 }
 
+// Validate validates the server member xp update request
+// Returns nil if valid, otherwise returns an error
+func (xp *ServerXPUpdate) Validate() error {
+	validate := validator.New()
+	return validate.Struct(xp)
+}
+
+// ServerSocialLink is the request body for retrieving server member social link
 type ServerSocialLink struct {
 	Handle    string `json:"handle,omitempty"`
 	ServiceID string `json:"serviceId,omitempty"`
 	Type      string `json:"type"`
 }
 
+// WebhookCreate is the request body for creating a webhook
 type WebhookCreate struct {
-	Name      string `json:"name"`
+	Name      string `json:"name" validate:"min=1,max=128"`
 	ChannelID string `json:"channelId"`
 }
 
+// Validate validates the webhook create request
+// Returns nil if valid, otherwise returns an error
+func (w *WebhookCreate) Validate() error {
+	validate := validator.New()
+	return validate.Struct(w)
+}
+
+// WebhookUpdate is the request body for updating a webhook
 type WebhookUpdate struct {
-	Name      string `json:"name"`
+	Name      string `json:"name" validate:"min=1,max=128"`
 	ChannelID string `json:"channelId"`
+}
+
+// Validate validates the webhook update request
+// Returns nil if valid, otherwise returns an error
+func (w *WebhookUpdate) Validate() error {
+	validate := validator.New()
+	return validate.Struct(w)
 }
