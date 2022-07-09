@@ -104,7 +104,7 @@ func constCase(name string) string {
 
 func isGuildedEvent(name string) bool {
 	switch {
-	case name == "Connect", name == "Disconnect", name == "Event", name == "RateLimit", name == "Interface":
+	case name == "Connect", name == "Disconnect", name == "Event", name == "RateLimit", name == "Interface", name == "Resume":
 		return false
 	default:
 		return true

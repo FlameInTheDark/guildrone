@@ -205,6 +205,11 @@ func (s *Session) onEvent(messageType int, message []byte) (*Event, error) {
 		return e, nil
 	}
 
+	if e.Operation == 2 {
+		s.handleEvent(resumeEventType, &Resume{})
+		return e, nil
+	}
+
 	// Map event to registered event handlers and pass it along to any registered handlers.
 	if eh, ok := registeredInterfaceProviders[e.Type]; ok {
 		e.Struct = eh.New()

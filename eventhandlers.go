@@ -27,6 +27,7 @@ const (
 	listItemUpdatedEventType               = "ListItemUpdated"
 	rateLimitEventType                     = "__RateLimit__"
 	readyEventType                         = "Ready"
+	resumeEventType                        = "__Resume__"
 	teamChannelCreatedEventType            = "TeamChannelCreated"
 	teamChannelUpdatedEventType            = "TeamChannelUpdated"
 	teamMemberBannedEventType              = "TeamMemberBanned"
@@ -419,6 +420,21 @@ func (eh readyEventHandler) Handle(s *Session, i interface{}) {
 	}
 }
 
+// resumeEventHandler is an event handler for Resume events.
+type resumeEventHandler func(*Session, *Resume)
+
+// Type returns the event type for Resume events.
+func (eh resumeEventHandler) Type() string {
+	return resumeEventType
+}
+
+// Handle is the handler for Resume events.
+func (eh resumeEventHandler) Handle(s *Session, i interface{}) {
+	if t, ok := i.(*Resume); ok {
+		eh(s, t)
+	}
+}
+
 // teamChannelCreatedEventHandler is an event handler for TeamChannelCreated events.
 type teamChannelCreatedEventHandler func(*Session, *TeamChannelCreated)
 
@@ -663,6 +679,8 @@ func handlerForInterface(handler interface{}) EventHandler {
 		return rateLimitEventHandler(v)
 	case func(*Session, *Ready):
 		return readyEventHandler(v)
+	case func(*Session, *Resume):
+		return resumeEventHandler(v)
 	case func(*Session, *TeamChannelCreated):
 		return teamChannelCreatedEventHandler(v)
 	case func(*Session, *TeamChannelUpdated):

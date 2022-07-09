@@ -18,6 +18,10 @@ type Connect struct{}
 // This is a synthetic event and is not dispatched by Guilded.
 type Disconnect struct{}
 
+// Resume is the data for a Resume event.
+// This is a synthetic event and is not dispatched by Guilded.
+type Resume struct{}
+
 // RateLimit is the data for a RateLimit event.
 // This is a synthetic event and is not dispatched by Guilded.
 type RateLimit struct {
