@@ -1,4 +1,5 @@
 # GuilDrone
+[![Go Reference](https://pkg.go.dev/badge/github.com/FlameInTheDark/guildrone.svg)](https://pkg.go.dev/github.com/FlameInTheDark/guildrone) [![Go Report Card](https://goreportcard.com/badge/github.com/FlameInTheDark/guildrone)](https://goreportcard.com/report/github.com/FlameInTheDark/guildrone)
 
 This is a Guilded chat library based on [discordgo](https://github.com/bwmarrin/discordgo) by [bwmarrin](https://github.com/bwmarrin).
 

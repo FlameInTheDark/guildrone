@@ -47,6 +47,13 @@ func (s *Session) Open() error {
 	header := http.Header{}
 	header.Add("accept-encoding", "zlib")
 	header.Add("Authorization", fmt.Sprintf("Bearer %s", s.Token))
+	if s.ShouldReplayEventsOnReconnect {
+		s.eventMu.RLock()
+		if len(s.LastEventID) > 0 {
+			header.Add("guilded-last-message-id", s.LastEventID)
+		}
+		s.eventMu.Unlock()
+	}
 	s.wsConn, _, err = websocket.DefaultDialer.Dial(EndpointGuildedWebsocket, header)
 	if err != nil {
 		s.log(LogError, "error connecting to gateway %s, %s", EndpointGuildedWebsocket, err)
@@ -186,6 +193,12 @@ func (s *Session) onEvent(messageType int, message []byte) (*Event, error) {
 	}
 
 	s.log(LogDebug, "Op: %d, MsgID: %d, Type: %s, Data: %s\n\n", e.Operation, e.MessageID, e.Type, string(e.RawData))
+
+	if s.ShouldReplayEventsOnReconnect {
+		s.eventMu.Lock()
+		s.LastEventID = e.MessageID
+		s.eventMu.Unlock()
+	}
 
 	if e.Operation == 1 {
 		// Op1 is handled by Open()
@@ -336,9 +349,6 @@ func (s *Session) CloseWithCode(closeCode int) (err error) {
 		close(s.listening)
 		s.listening = nil
 	}
-
-	// TODO: Close all active Voice Connections too
-	// this should force stop any reconnecting voice channels too
 
 	if s.wsConn != nil {
 

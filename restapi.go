@@ -921,6 +921,9 @@ func (s *Session) ServerWebhookUpdate(serverID, webhookID string, data *WebhookU
 	return st, err
 }
 
+// ServerWebhookDelete deletes a webhook in a server.
+// serverID  : The ID of a Server.
+// webhookID : The ID of a Webhook.
 func (s *Session) ServerWebhookDelete(serverID, webhookID string) error {
 	_, err := s.Request("DELETE", EndpointServerWeebhook(serverID, webhookID), nil)
 	return err

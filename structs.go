@@ -47,6 +47,13 @@ type Session struct {
 	// Should the session reconnect the websocket on errors.
 	ShouldReconnectOnError bool
 
+	// ID of the last websocket event message
+	eventMu     sync.RWMutex
+	LastEventID string
+
+	// Should replay missed events on websocket reconnect
+	ShouldReplayEventsOnReconnect bool
+
 	// Should the session retry requests when rate limited.
 	ShouldRetryOnRateLimit bool
 
