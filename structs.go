@@ -330,6 +330,19 @@ type ForumTopic struct {
 	UpdatedAt          *time.Time `json:"updatedAt,omitempty"`
 }
 
+// ForumTopicSummary is the forum topic summary model
+type ForumTopicSummary struct {
+	ID               int        `json:"id"`
+	ServerID         string     `json:"serverId"`
+	ChannelID        string     `json:"channelId"`
+	Title            string     `json:"title"`
+	CreatedAt        time.Time  `json:"createdAt"`
+	CreatedBy        string     `json:"createdBy"`
+	CreatedByWebhook string     `json:"createdByWebhook,omitempty"`
+	UpdatedAt        *time.Time `json:"updatedAt,omitempty"`
+	BumpedAt         *time.Time `json:"bumpedAt,omitempty"`
+}
+
 // ChannelForumTopicCreate is the request body for creating a forum topic
 type ChannelForumTopicCreate struct {
 	Title   string `json:"title" validate:"min=1"`
@@ -339,6 +352,18 @@ type ChannelForumTopicCreate struct {
 // Validate validates the channel forum topic create request
 // Returns nil if valid, otherwise returns an error
 func (c *ChannelForumTopicCreate) Validate() error {
+	validate := validator.New()
+	return validate.Struct(c)
+}
+
+// ChannelForumTopicUpdate is the request body for updating a forum topic
+type ChannelForumTopicUpdate struct {
+	Title   string `json:"title,omitempty" validate:"min=1,max=500"`
+	Content string `json:"content,omitempty"`
+}
+
+// Validate validates the channel forum topic update request
+func (c *ChannelForumTopicUpdate) Validate() error {
 	validate := validator.New()
 	return validate.Struct(c)
 }

@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"net/url"
 	"strconv"
 	"strings"
 	"time"
@@ -255,12 +256,25 @@ func (s *Session) ChannelMessage(channelID string, messageID string) (*ChatMessa
 // afterTime      : The time after which messages are to be returned.
 // includePrivate : Whether to include private messages.
 func (s *Session) ChannelMessages(channelID string, limit int, beforeTime, afterTime *time.Time, includePrivate bool) ([]*ChatMessage, error) {
-	body, err := s.Request("GET", EndpointChannelMessages(channelID), &MessagesRequest{
-		Limit:          limit,
-		Before:         beforeTime,
-		After:          afterTime,
-		IncludePrivate: includePrivate,
-	})
+	uri := EndpointChannelMessages(channelID)
+	v := url.Values{}
+	if limit > 0 {
+		v.Set("limit", strconv.Itoa(limit))
+	}
+	if beforeTime != nil {
+		v.Set("before", beforeTime.Format(time.RFC3339))
+	}
+	if afterTime != nil {
+		v.Set("after", afterTime.Format(time.RFC3339))
+	}
+	if includePrivate != false {
+		v.Set("includePrivate", "true")
+	}
+	if len(v) > 0 {
+		uri += "?" + v.Encode()
+	}
+
+	body, err := s.Request("GET", uri, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -501,11 +515,75 @@ func (s *Session) ChannelForumTopicCreate(channelID, title, content string) (*Fo
 	return st, err
 }
 
+// ChannelForumTopics returns an array of topics in a channel.
+// channelID : The ID of a Channel.
+// before    : The timestamp of the oldest topic to return.
+// limit     : The maximum number of topics to return.
+func (s *Session) ChannelForumTopics(channelID string, before *time.Time, limit int) ([]ForumTopicSummary, error) {
+	uri := EndpointChannelTopics(channelID)
+	v := url.Values{}
+	if limit > 0 {
+		v.Set("limit", strconv.Itoa(limit))
+	}
+	if before != nil {
+		v.Set("before", before.Format(time.RFC3339))
+	}
+	if len(v) > 0 {
+		uri += "?" + v.Encode()
+	}
+
+	body, err := s.Request("GET", uri, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var st []ForumTopicSummary
+	err = unmarshal(body, &st)
+	return st, err
+}
+
+// ChannelForumTopic returns a topic in a channel.
+// channelID : The ID of a Channel.
+// topicID   : The ID of a Topic.
+func (s *Session) ChannelForumTopic(channelID string, topicID int) (*ForumTopic, error) {
+	body, err := s.Request("GET", EndpointChannelTopic(channelID, fmt.Sprintf("%d", topicID)), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var st *ForumTopic
+	err = unmarshal(body, &st)
+	return st, err
+}
+
+// ChannelForumTopicUpdate updates a topic in a channel.
+// channelID : The ID of a Channel.
+// topicID   : The ID of a Topic.
+// data	     : The data for the topic.
+func (s *Session) ChannelForumTopicUpdate(channelID string, topicID int, data *ChannelForumTopicUpdate) (*ForumTopic, error) {
+	body, err := s.Request("PATCH", EndpointChannelTopic(channelID, fmt.Sprintf("%d", topicID)), data)
+	if err != nil {
+		return nil, err
+	}
+
+	var st *ForumTopic
+	err = unmarshal(body, &st)
+	return st, err
+}
+
+// ChannelForumTopicDelete deletes a topic in a channel.
+// channelID : The ID of a Channel.
+// topicID   : The ID of a Topic.
+func (s *Session) ChannelForumTopicDelete(channelID string, topicID int) error {
+	_, err := s.Request("DELETE", EndpointChannelTopic(channelID, fmt.Sprintf("%d", topicID)), nil)
+	return err
+}
+
 // ------------------------------------------------------------------------------------------------
 // Functions specific to Guilded ListItem
 // ------------------------------------------------------------------------------------------------
 
-// ChannelListItem creates a list item in a channel.
+// ChannelListItemCreate creates a list item in a channel.
 // channelID : The ID of a Channel.
 // data	     : The data for the list item.
 func (s *Session) ChannelListItemCreate(channelID string, data *ChannelListItem) (*ListItem, error) {
@@ -688,8 +766,23 @@ func (s *Session) ChannelEvent(channelID string, eventID int) (*CalendarEvent, e
 // ChannelEvents returns an array of calendar events in a channel.
 // channelID : The ID of a Channel.
 // data	     : The data for the event.
-func (s *Session) ChannelEvents(channelID string, data *ChannelEventsRequest) ([]*CalendarEvent, error) {
-	body, err := s.Request("GET", EndpointChannelEvents(channelID), data)
+func (s *Session) ChannelEvents(channelID string, before, after *time.Time, limit int) ([]*CalendarEvent, error) {
+	uri := EndpointChannelEvents(channelID)
+
+	v := url.Values{}
+	if limit > 0 {
+		v.Set("limit", strconv.Itoa(limit))
+	}
+	if before != nil {
+		v.Set("before", before.Format(time.RFC3339))
+	}
+	if after != nil {
+		v.Set("after", after.Format(time.RFC3339))
+	}
+	if len(v) > 0 {
+		uri += "?" + v.Encode()
+	}
+	body, err := s.Request("GET", EndpointChannelEvents(channelID), nil)
 	if err != nil {
 		return nil, err
 	}
