@@ -9,6 +9,9 @@ package guildrone
 const (
 	calendarEventCreatedEventType          = "CalendarEventCreated"
 	calendarEventDeletedEventType          = "CalendarEventDeleted"
+	calendarEventRsvpDeletedEventType      = "CalendarEventRsvpDeleted"
+	calendarEventRsvpManyUpdatedEventType  = "CalendarEventRsvpManyUpdated"
+	calendarEventRsvpUpdatedEventType      = "CalendarEventRsvpUpdated"
 	calendarEventUpdatedEventType          = "CalendarEventUpdated"
 	channelMessageReactionCreatedEventType = "ChannelMessageReactionCreated"
 	channelMessageReactionDeletedEventType = "ChannelMessageReactionDeleted"
@@ -21,6 +24,9 @@ const (
 	docDeletedEventType                    = "DocDeleted"
 	docUpdatedEventType                    = "DocUpdated"
 	eventEventType                         = "__Event__"
+	forumTopicCreatedEventType             = "ForumTopicCreated"
+	forumTopicDeletedEventType             = "ForumTopicDeleted"
+	forumTopicUpdatedEventType             = "ForumTopicUpdated"
 	listItemCompletedEventType             = "ListItemCompleted"
 	listItemCreatedEventType               = "ListItemCreated"
 	listItemDeletedEventType               = "ListItemDeleted"
@@ -76,6 +82,66 @@ func (eh calendarEventDeletedEventHandler) New() interface{} {
 // Handle is the handler for CalendarEventDeleted events.
 func (eh calendarEventDeletedEventHandler) Handle(s *Session, i interface{}) {
 	if t, ok := i.(*CalendarEventDeleted); ok {
+		eh(s, t)
+	}
+}
+
+// calendarEventRsvpDeletedEventHandler is an event handler for CalendarEventRsvpDeleted events.
+type calendarEventRsvpDeletedEventHandler func(*Session, *CalendarEventRsvpDeleted)
+
+// Type returns the event type for CalendarEventRsvpDeleted events.
+func (eh calendarEventRsvpDeletedEventHandler) Type() string {
+	return calendarEventRsvpDeletedEventType
+}
+
+// New returns a new instance of CalendarEventRsvpDeleted.
+func (eh calendarEventRsvpDeletedEventHandler) New() interface{} {
+	return &CalendarEventRsvpDeleted{}
+}
+
+// Handle is the handler for CalendarEventRsvpDeleted events.
+func (eh calendarEventRsvpDeletedEventHandler) Handle(s *Session, i interface{}) {
+	if t, ok := i.(*CalendarEventRsvpDeleted); ok {
+		eh(s, t)
+	}
+}
+
+// calendarEventRsvpManyUpdatedEventHandler is an event handler for CalendarEventRsvpManyUpdated events.
+type calendarEventRsvpManyUpdatedEventHandler func(*Session, *CalendarEventRsvpManyUpdated)
+
+// Type returns the event type for CalendarEventRsvpManyUpdated events.
+func (eh calendarEventRsvpManyUpdatedEventHandler) Type() string {
+	return calendarEventRsvpManyUpdatedEventType
+}
+
+// New returns a new instance of CalendarEventRsvpManyUpdated.
+func (eh calendarEventRsvpManyUpdatedEventHandler) New() interface{} {
+	return &CalendarEventRsvpManyUpdated{}
+}
+
+// Handle is the handler for CalendarEventRsvpManyUpdated events.
+func (eh calendarEventRsvpManyUpdatedEventHandler) Handle(s *Session, i interface{}) {
+	if t, ok := i.(*CalendarEventRsvpManyUpdated); ok {
+		eh(s, t)
+	}
+}
+
+// calendarEventRsvpUpdatedEventHandler is an event handler for CalendarEventRsvpUpdated events.
+type calendarEventRsvpUpdatedEventHandler func(*Session, *CalendarEventRsvpUpdated)
+
+// Type returns the event type for CalendarEventRsvpUpdated events.
+func (eh calendarEventRsvpUpdatedEventHandler) Type() string {
+	return calendarEventRsvpUpdatedEventType
+}
+
+// New returns a new instance of CalendarEventRsvpUpdated.
+func (eh calendarEventRsvpUpdatedEventHandler) New() interface{} {
+	return &CalendarEventRsvpUpdated{}
+}
+
+// Handle is the handler for CalendarEventRsvpUpdated events.
+func (eh calendarEventRsvpUpdatedEventHandler) Handle(s *Session, i interface{}) {
+	if t, ok := i.(*CalendarEventRsvpUpdated); ok {
 		eh(s, t)
 	}
 }
@@ -301,6 +367,66 @@ func (eh eventEventHandler) Type() string {
 // Handle is the handler for Event events.
 func (eh eventEventHandler) Handle(s *Session, i interface{}) {
 	if t, ok := i.(*Event); ok {
+		eh(s, t)
+	}
+}
+
+// forumTopicCreatedEventHandler is an event handler for ForumTopicCreated events.
+type forumTopicCreatedEventHandler func(*Session, *ForumTopicCreated)
+
+// Type returns the event type for ForumTopicCreated events.
+func (eh forumTopicCreatedEventHandler) Type() string {
+	return forumTopicCreatedEventType
+}
+
+// New returns a new instance of ForumTopicCreated.
+func (eh forumTopicCreatedEventHandler) New() interface{} {
+	return &ForumTopicCreated{}
+}
+
+// Handle is the handler for ForumTopicCreated events.
+func (eh forumTopicCreatedEventHandler) Handle(s *Session, i interface{}) {
+	if t, ok := i.(*ForumTopicCreated); ok {
+		eh(s, t)
+	}
+}
+
+// forumTopicDeletedEventHandler is an event handler for ForumTopicDeleted events.
+type forumTopicDeletedEventHandler func(*Session, *ForumTopicDeleted)
+
+// Type returns the event type for ForumTopicDeleted events.
+func (eh forumTopicDeletedEventHandler) Type() string {
+	return forumTopicDeletedEventType
+}
+
+// New returns a new instance of ForumTopicDeleted.
+func (eh forumTopicDeletedEventHandler) New() interface{} {
+	return &ForumTopicDeleted{}
+}
+
+// Handle is the handler for ForumTopicDeleted events.
+func (eh forumTopicDeletedEventHandler) Handle(s *Session, i interface{}) {
+	if t, ok := i.(*ForumTopicDeleted); ok {
+		eh(s, t)
+	}
+}
+
+// forumTopicUpdatedEventHandler is an event handler for ForumTopicUpdated events.
+type forumTopicUpdatedEventHandler func(*Session, *ForumTopicUpdated)
+
+// Type returns the event type for ForumTopicUpdated events.
+func (eh forumTopicUpdatedEventHandler) Type() string {
+	return forumTopicUpdatedEventType
+}
+
+// New returns a new instance of ForumTopicUpdated.
+func (eh forumTopicUpdatedEventHandler) New() interface{} {
+	return &ForumTopicUpdated{}
+}
+
+// Handle is the handler for ForumTopicUpdated events.
+func (eh forumTopicUpdatedEventHandler) Handle(s *Session, i interface{}) {
+	if t, ok := i.(*ForumTopicUpdated); ok {
 		eh(s, t)
 	}
 }
@@ -643,6 +769,12 @@ func handlerForInterface(handler interface{}) EventHandler {
 		return calendarEventCreatedEventHandler(v)
 	case func(*Session, *CalendarEventDeleted):
 		return calendarEventDeletedEventHandler(v)
+	case func(*Session, *CalendarEventRsvpDeleted):
+		return calendarEventRsvpDeletedEventHandler(v)
+	case func(*Session, *CalendarEventRsvpManyUpdated):
+		return calendarEventRsvpManyUpdatedEventHandler(v)
+	case func(*Session, *CalendarEventRsvpUpdated):
+		return calendarEventRsvpUpdatedEventHandler(v)
 	case func(*Session, *CalendarEventUpdated):
 		return calendarEventUpdatedEventHandler(v)
 	case func(*Session, *ChannelMessageReactionCreated):
@@ -667,6 +799,12 @@ func handlerForInterface(handler interface{}) EventHandler {
 		return docUpdatedEventHandler(v)
 	case func(*Session, *Event):
 		return eventEventHandler(v)
+	case func(*Session, *ForumTopicCreated):
+		return forumTopicCreatedEventHandler(v)
+	case func(*Session, *ForumTopicDeleted):
+		return forumTopicDeletedEventHandler(v)
+	case func(*Session, *ForumTopicUpdated):
+		return forumTopicUpdatedEventHandler(v)
 	case func(*Session, *ListItemCompleted):
 		return listItemCompletedEventHandler(v)
 	case func(*Session, *ListItemCreated):
@@ -709,6 +847,9 @@ func handlerForInterface(handler interface{}) EventHandler {
 func init() {
 	registerInterfaceProvider(calendarEventCreatedEventHandler(nil))
 	registerInterfaceProvider(calendarEventDeletedEventHandler(nil))
+	registerInterfaceProvider(calendarEventRsvpDeletedEventHandler(nil))
+	registerInterfaceProvider(calendarEventRsvpManyUpdatedEventHandler(nil))
+	registerInterfaceProvider(calendarEventRsvpUpdatedEventHandler(nil))
 	registerInterfaceProvider(calendarEventUpdatedEventHandler(nil))
 	registerInterfaceProvider(channelMessageReactionCreatedEventHandler(nil))
 	registerInterfaceProvider(channelMessageReactionDeletedEventHandler(nil))
@@ -718,6 +859,9 @@ func init() {
 	registerInterfaceProvider(docCreatedEventHandler(nil))
 	registerInterfaceProvider(docDeletedEventHandler(nil))
 	registerInterfaceProvider(docUpdatedEventHandler(nil))
+	registerInterfaceProvider(forumTopicCreatedEventHandler(nil))
+	registerInterfaceProvider(forumTopicDeletedEventHandler(nil))
+	registerInterfaceProvider(forumTopicUpdatedEventHandler(nil))
 	registerInterfaceProvider(listItemCompletedEventHandler(nil))
 	registerInterfaceProvider(listItemCreatedEventHandler(nil))
 	registerInterfaceProvider(listItemDeletedEventHandler(nil))

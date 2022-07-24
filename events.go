@@ -172,3 +172,33 @@ type Ready struct {
 	HeartbeatIntervalMS int     `json:"heartbeatIntervalMs"`
 	User                BotUser `json:"user"`
 }
+
+type ForumTopicCreated struct {
+	ServerID   string     `json:"serverId"`
+	ForumTopic ForumTopic `json:"forumTopic"`
+}
+
+type ForumTopicUpdated struct {
+	ServerID   string     `json:"serverId"`
+	ForumTopic ForumTopic `json:"forumTopic"`
+}
+
+type ForumTopicDeleted struct {
+	ServerID   string     `json:"serverId"`
+	ForumTopic ForumTopic `json:"forumTopic"`
+}
+
+type CalendarEventRsvpUpdated struct {
+	ServerID          string            `json:"serverId"`
+	CalendarEventRsvp CalendarEventRsvp `json:"calendarEventRsvp"`
+}
+
+type CalendarEventRsvpManyUpdated struct {
+	ServerID           string              `json:"serverId"`
+	CalendarEventRsvps []CalendarEventRsvp `json:"calendarEventRsvps"`
+}
+
+type CalendarEventRsvpDeleted struct {
+	ServerID          string            `json:"serverId"`
+	CalendarEventRsvp CalendarEventRsvp `json:"calendarEventRsvp"`
+}

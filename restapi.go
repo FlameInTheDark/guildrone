@@ -815,6 +815,60 @@ func (s *Session) ChannelEventDelete(channelID string, eventID int) error {
 	return err
 }
 
+// ChannelEventRsvp returns a calendar event rsvp in a channel.
+// channelID : The ID of a Channel.
+// eventID   : The ID of an CalendarEvent.
+// userID    : The ID of a User.
+func (s *Session) ChannelEventRsvp(channelID string, eventID int, userID string) (*CalendarEventRsvp, error) {
+	data, err := s.Request("GET", EndpointChannelEventRsvp(channelID, fmt.Sprintf("%d", eventID), userID), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var st *CalendarEventRsvp
+	err = unmarshal(data, &st)
+	return st, err
+}
+
+// ChannelEventRsvpSet create or update a calendar event rsvp in a channel.
+// channelID : The ID of a Channel.
+// eventID   : The ID of an CalendarEvent.
+// userID    : The ID of a User.
+// status    : The status of the rsvp.
+func (s *Session) ChannelEventRsvpSet(channelID string, eventID int, userID string, status RsvpStatus) (*CalendarEventRsvp, error) {
+	data, err := s.Request("PUT", EndpointChannelEventRsvp(channelID, fmt.Sprintf("%d", eventID), userID), &CalendarSetRsvpStatusRrequest{Status: status})
+	if err != nil {
+		return nil, err
+	}
+
+	var st *CalendarEventRsvp
+	err = unmarshal(data, &st)
+	return st, err
+}
+
+// ChannelEventRsvpDelete deletes a calendar event rsvp in a channel.
+// channelID : The ID of a Channel.
+// eventID   : The ID of an CalendarEvent.
+// userID    : The ID of a User.
+func (s *Session) ChannelEventRsvpDelete(channelID string, eventID int, userID string) error {
+	_, err := s.Request("DELETE", EndpointChannelEventRsvp(channelID, fmt.Sprintf("%d", eventID), userID), nil)
+	return err
+}
+
+// ChannelEventRsvps returns an array of calendar event rsvps in a channel.
+// channelID : The ID of a Channel.
+// eventID   : The ID of an CalendarEvent.
+func (s *Session) ChannelEventRsvps(channelID string, eventID int) ([]*CalendarEventRsvp, error) {
+	data, err := s.Request("GET", EndpointChannelEventRsvps(channelID, fmt.Sprintf("%d", eventID)), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var st []*CalendarEventRsvp
+	err = unmarshal(data, &st)
+	return st, err
+}
+
 // ------------------------------------------------------------------------------------------------
 // Functions specific to Guilded Reactions
 // ------------------------------------------------------------------------------------------------

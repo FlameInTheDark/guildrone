@@ -29,6 +29,8 @@ var (
 	EndpointChannelDoc           = func(cID, dID string) string { return EndpointChannels + cID + "/docs/" + dID }
 	EndpointChannelEvents        = func(cID string) string { return EndpointChannels + cID + "/events" }
 	EndpointChannelEvent         = func(cID, eID string) string { return EndpointChannels + cID + "/events/" + eID }
+	EndpointChannelEventRsvps    = func(cID, eID string) string { return EndpointChannels + cID + "/events/" + eID + "/rsvps" }
+	EndpointChannelEventRsvp     = func(cID, eID, uID string) string { return EndpointChannels + cID + "/events/" + eID + "/rsvps/" + uID }
 	EndpointChannelReaction      = func(cID, coID, eID string) string {
 		return EndpointChannels + cID + "/content/" + coID + "/emotes/" + eID
 	}

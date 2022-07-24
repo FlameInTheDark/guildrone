@@ -183,6 +183,32 @@ type CalendarEvent struct {
 	Cancellation Cancellation `json:"cancellation"`
 }
 
+type RsvpStatus string
+
+const (
+	RsvpStatusGoing      RsvpStatus = "going"
+	RsvpStatusMaybe      RsvpStatus = "maybe"
+	RsvpStatusDeclined   RsvpStatus = "declined"
+	RsvpStatusInvited    RsvpStatus = "invited"
+	RsvpStatusWaitlisted RsvpStatus = "waitlisted"
+)
+
+type CalendarEventRsvp struct {
+	CalendarEventID int        `json:"calendarEventId"`
+	ChannelID       string     `json:"channelId"`
+	ServerID        string     `json:"serverId"`
+	UserID          string     `json:"userId"`
+	Status          RsvpStatus `json:"status"`
+	CreatedBy       string     `json:"createdBy"`
+	CreatedAt       time.Time  `json:"createdAt"`
+	UpdatedBy       string     `json:"updatedBy"`
+	UpdatedAt       *time.Time `json:"updatedAt"`
+}
+
+type CalendarSetRsvpStatusRrequest struct {
+	Status RsvpStatus `json:"status"`
+}
+
 type Cancellation struct {
 	Description string `json:"description"`
 	CreatedBy   string `json:"createdBy"`
