@@ -119,6 +119,15 @@ type MemberRole struct {
 	RoleIDs []int  `json:"roleId"`
 }
 
+// Mentions stores the data of a mention
+type Mentions struct {
+	Users    []MentionUser    `json:"users,omitempty" validate:"omitempty,min=1"`
+	Channels []MentionChannel `json:"channels,omitempty" validate:"omitempty,min=1"`
+	Roles    []MentionRole    `json:"roles,omitempty" validate:"omitempty,min=1"`
+	Everyone bool             `json:"everyone,omitempty"`
+	Here     bool             `json:"here,omitempty"`
+}
+
 // ServerChannelType is a sting that represents the type of a server channel.
 // ("announcements", "chat", "calendar", "forums", "media", "docs", "voice", "list", "scheduling", or "stream")
 type ServerChannelType string
@@ -354,6 +363,8 @@ type ForumTopic struct {
 	CreatedBy          string     `json:"createdBy"`
 	CreatedByWebhookId string     `json:"createdByWebhookId,omitempty"`
 	UpdatedAt          *time.Time `json:"updatedAt,omitempty"`
+	BumpedAt           *time.Time `json:"bumpedAt,omitempty"`
+	Mentions           *Mentions  `json:"mentions,omitempty"`
 }
 
 // ForumTopicSummary is the forum topic summary model

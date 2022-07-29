@@ -78,15 +78,6 @@ type ChatEmbedField struct {
 	Inline bool   `json:"inline,omitempty"`
 }
 
-// Mentions stores the data of a mention
-type Mentions struct {
-	Users    []MentionUser    `json:"users,omitempty" validate:"omitempty,min=1"`
-	Channels []MentionChannel `json:"channels,omitempty" validate:"omitempty,min=1"`
-	Roles    []MentionRole    `json:"roles,omitempty" validate:"omitempty,min=1"`
-	Everyone bool             `json:"everyone,omitempty"`
-	Here     bool             `json:"here,omitempty"`
-}
-
 type MentionUser struct {
 	ID string `json:"id"`
 }
