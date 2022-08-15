@@ -1,5 +1,5 @@
 # GuilDrone
-[![Go Reference](https://pkg.go.dev/badge/github.com/FlameInTheDark/guildrone.svg)](https://pkg.go.dev/github.com/FlameInTheDark/guildrone) [![Go Report Card](https://goreportcard.com/badge/github.com/FlameInTheDark/guildrone)](https://goreportcard.com/report/github.com/FlameInTheDark/guildrone)
+[![Go Reference](https://pkg.go.dev/badge/github.com/FlameInTheDark/guildrone.svg)](https://pkg.go.dev/github.com/FlameInTheDark/guildrone) [![Release](https://img.shields.io/github/v/release/FlameInTheDark/guildrone.svg?style=rounded)](https://github.com/FlameInTheDark/guildrone/releases/latest) [![Go Report Card](https://goreportcard.com/badge/github.com/FlameInTheDark/guildrone)](https://goreportcard.com/report/github.com/FlameInTheDark/guildrone) [![codebeat badge](https://codebeat.co/badges/4f78784c-391c-4992-b157-d40661f6692d)](https://codebeat.co/projects/github-com-flameinthedark-guildrone-main)
 
 This is a Guilded chat library based on [discordgo](https://github.com/bwmarrin/discordgo) by [bwmarrin](https://github.com/bwmarrin).
 
