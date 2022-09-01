@@ -3,7 +3,7 @@ package guildrone
 var (
 	APIVersion = "1"
 
-	EndpointGuildedWebsocket = "wss://api.guilded.gg/v1/websocket"
+	EndpointGuildedWebsocket = "wss://www.guilded.gg/websocket/v1"
 
 	EndpointGuilded  = "https://www.guilded.gg/"
 	EndpointAPI      = EndpointGuilded + "api/v" + APIVersion + "/"
