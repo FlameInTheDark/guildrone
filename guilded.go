@@ -6,7 +6,7 @@ import (
 )
 
 // VERSION of Guildrone, follows Semantic Versioning. (http://semver.org/)
-const VERSION = "0.3.3"
+const VERSION = "0.3.4"
 
 // New creates a new Guilded session with provided token
 func New(token string) (s *Session, err error) {

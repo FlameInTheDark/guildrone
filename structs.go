@@ -465,6 +465,11 @@ type ServerXPUpdate struct {
 	Amount int `json:"amount" validate:"min=-1000,max=1000"`
 }
 
+// ServerXPSet is the request body for set a server member xp
+type ServerXPSet struct {
+	Total int `json:"total" validate:"min=-1000000000,max=1000000000"`
+}
+
 // Validate validates the server member xp update request
 // Returns nil if valid, otherwise returns an error
 func (xp *ServerXPUpdate) Validate() error {

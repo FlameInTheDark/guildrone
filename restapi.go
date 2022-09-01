@@ -912,6 +912,24 @@ func (s *Session) ServerMemberXPAward(serverID, memberID string, amount int) (in
 	return st.Amount, err
 }
 
+// ServerMemberXPSet sets role XP to a role of a server.
+// serverID : The ID of a Server.
+// memberID   : The ID of a Member.
+// total   : The amount of XP set.
+func (s *Session) ServerMemberXPSet(serverID string, memberID string, total int) (int, error) {
+	body, err := s.Request("PUT", EndpointServerXPMember(serverID, memberID), &ServerXPSet{Total: total})
+	if err != nil {
+		return 0, err
+	}
+
+	var st struct {
+		Total int `json:"total"`
+	}
+
+	err = unmarshal(body, &st)
+	return st.Total, err
+}
+
 // ServerRoleXPAward awards XP to a role of a server.
 // serverID : The ID of a Server.
 // roleID   : The ID of a Role.
