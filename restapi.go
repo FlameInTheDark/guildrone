@@ -579,6 +579,22 @@ func (s *Session) ChannelForumTopicDelete(channelID string, topicID int) error {
 	return err
 }
 
+// ChannelForumTopicPin pins a topic in a channel.
+// channelID : The ID of a Channel.
+// topicID   : The ID of a Topic.
+func (s *Session) ChannelForumTopicPin(channelID string, topicID int) error {
+	_, err := s.Request("PUT", EndpointChannelTopicPin(channelID, fmt.Sprintf("%d", topicID)), nil)
+	return err
+}
+
+// ChannelForumTopicUnpin unpins a topic in a channel.
+// channelID : The ID of a Channel.
+// topicID   : The ID of a Topic.
+func (s *Session) ChannelForumTopicUnpin(channelID string, topicID int) error {
+	_, err := s.Request("DELETE", EndpointChannelTopicPin(channelID, fmt.Sprintf("%d", topicID)), nil)
+	return err
+}
+
 // ------------------------------------------------------------------------------------------------
 // Functions specific to Guilded ListItem
 // ------------------------------------------------------------------------------------------------
@@ -916,7 +932,7 @@ func (s *Session) ServerMemberXPAward(serverID, memberID string, amount int) (in
 // serverID : The ID of a Server.
 // memberID   : The ID of a Member.
 // total   : The amount of XP set.
-func (s *Session) ServerMemberXPSet(serverID string, memberID string, total int) (int, error) {
+func (s *Session) ServerMemberXPSet(serverID, memberID string, total int) (int, error) {
 	body, err := s.Request("PUT", EndpointServerXPMember(serverID, memberID), &ServerXPSet{Total: total})
 	if err != nil {
 		return 0, err

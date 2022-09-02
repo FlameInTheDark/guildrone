@@ -22,6 +22,7 @@ var (
 	EndpointServerBansMember     = func(sID, uID string) string { return EndpointServers + sID + "/bans/" + uID }
 	EndpointChannelTopics        = func(cID string) string { return EndpointChannels + cID + "/topics" }
 	EndpointChannelTopic         = func(cID, tID string) string { return EndpointChannels + cID + "/topics/" + tID }
+	EndpointChannelTopicPin      = func(cID, tID string) string { return EndpointChannels + cID + "/topics/" + tID + "/pin" }
 	EndpointChannelItems         = func(cID string) string { return EndpointChannels + cID + "/items" }
 	EndpointChannelItem          = func(cID, iID string) string { return EndpointChannels + cID + "/items/" + iID }
 	EndpointChannelItemComplete  = func(cID, iID string) string { return EndpointChannels + cID + "/items/" + iID + "/complete" }
